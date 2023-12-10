@@ -11,6 +11,7 @@ from scipy.stats import pearsonr
 
 #file address
 file_path1 = '/Users/xingwenbo/Documents/CS2704/Chicago_Traffic_Tracker_-_Congestion_Estimates_by_Segments.csv'
+file_path2 = '/Users/xingwenbo/Documents/CS2704/Average_Daily_Traffic_Counts_-_Map.csv'
 df = pd.read_csv(file_path1)
 
 # ' CURRENT_SPEED'
@@ -50,6 +51,7 @@ plt.ylabel('Latitude')
 plt.grid(True)
 plt.show()
 
+
 congested_segments['last_updated_time'] = pd.to_datetime(congested_segments[' LAST_UPDATED']).dt.time
 
 time_distribution = congested_segments['last_updated_time'].value_counts()
@@ -73,7 +75,7 @@ print(f"The most frequent street is: {most_frequent_street}")
 print(' ')
 
 
-file_path2 = '/Users/xingwenbo/Documents/CS2704/Average_Daily_Traffic_Counts_-_Map.csv'
+
 
 congestion_data = pd.read_csv(file_path1)
 traffic_counts_data = pd.read_csv(file_path2)
@@ -99,8 +101,8 @@ congestion_speed = congestion_speed.head(min_length)
 # P value
 correlation, p_value = pearsonr(traffic_volume, congestion_speed)
 
-print("相关系数:", correlation)
-print("p 值:", p_value)
+print("Correlation coefficient:", correlation)
+print("p-value:", p_value)
 
 
 #heatmap creat
@@ -120,3 +122,27 @@ HeatMap(heat_data).add_to(map_hooray)
 heat_map_path = '/Users/xingwenbo/Documents/CS2704/Average_traffic_heatmap.html'
 map_hooray.save(heat_map_path)
 print(f"Heatmap saved to: {heat_map_path}")
+
+
+# Creat two box 
+df = pd.read_csv(file_path2)
+
+# Convert 'Total Passing Vehicle Volume' to a numeric format
+df['Total Passing Vehicle Volume'] = df['Total Passing Vehicle Volume'].str.replace(',', '').astype(float)
+
+# Creating the box plot
+plt.figure(figsize=(12, 6))
+sns.boxplot(x=df['Total Passing Vehicle Volume'])
+plt.title('Box Plot of Total Passing Vehicle Volume')
+plt.xlabel('Total Passing Vehicle Volume')
+plt.show()
+
+df = pd.read_csv(file_path1)
+df[' CURRENT_SPEED'] = pd.to_numeric(df[' CURRENT_SPEED'], errors='coerce')
+
+# Creating the box plot for 'Current Speed'
+plt.figure(figsize=(12, 6))
+sns.boxplot(x=df[' CURRENT_SPEED'])
+plt.title('Box Plot of Current Speed')
+plt.xlabel('Current Speed (mph)')
+plt.show()
